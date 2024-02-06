@@ -4,46 +4,90 @@ section .text
 
 global strstr
 
+; rdi -> meule de foin
+; rsi -> aiguille
+
 strstr:
-    xor rax, rax ; initialize rax
-    cmp byte [rsi], 0 ; verify if the second string is empty
-    je handleExit ; if empty exit
-    mov rdx, rsi ; rdx will stock the second string
+    xor rax, rax
     xor rcx, rcx
 
-looppmystrcspn:
-    cmp byte [rdi], 0 ; Verify if the actual pointer is empty of the first string
-    je charNotFound
+    cmp byte[rdi], 0
+    je exit
 
-    jmp loopSecondString ; If the first string is not empty, continue
+    cmp byte[rsi], 0
+    je exitFinalSuccess
 
-loopSecondString:
-    cmp byte [rdx], 0 ; verify if the actual pointer is empty of the second string
-    je endSndString ; if the second string is finish go on next char of the first string
+    mov rbx, rsi
+    jmp mystrlen ; Calculer la taille de la string "aiguille"
 
-    mov al, [rdx]
-    cmp al, [rdi]
-    je findCharacterandexit
-
-    inc rdx ; move to the next elem of the second string
-
-    jmp loopSecondString
-
-endSndString: ; continue to next incrementation of pointer of the first string
-    inc rdi
+mystrlen:
+    cmp byte [rsi], 0
+    je endstrlen
     inc rcx
-    mov rdx, rsi ; We set rdx at the pointer on the top of the second string
+    inc rsi
+    jmp mystrlen
 
-    jmp looppmystrcspn
+endstrlen:
+    mov rdx, rcx ; On stocke la valeur de la taille de aiguille dans rdx
+    xor rcx, rcx ; On réinitialise rcx pour pouvoir l'utiliser par la suite
+    mov rsi, rbx ; On reset rsi à sa valeur d'origine qui a été modifié par strlen
+    jmp loopMyStrStr
 
-findCharacterandexit: ; if the char in first string is equal to char of second string -> exit
+loopMyStrStr:
+    cmp rdi, 0 ; On check si la string meule de foin n'arrive pas au null byte
+    je exit
+
+    ; On va venir checker si l'élément de rdi est égal à l'élément de rsi[index]
+    ; meule_de_foin[i] == aiguille[index]
+    ; index est incrémenté quand on tombe sur une la bonne valeur dans l'aiguille
+    ; Sinon il est reset à 0
+
+    mov al, byte [rdi] ; On met le caractère de al dans haystack
+    mov bl, byte [rsi + rcx] ; On met le caractère de bl dans needle
+    cmp al, bl ; On compare meule_de_foin[i] == aiguille[index]
+    je charIsIndexOfAiguille
+
+    jmp charIsNotIndexOfAguille ; Si on a pas trouvé on continue
+
+; Permet de vérifier si toute la string n'a pas été trouvé
+; Sinon on vient implémenter l'index du ptr de aiguille
+
+charIsIndexOfAiguille:
+    inc rcx
+
+    cmp rcx, rdx
+    je exitSuccess
+
+    jmp endFirstLoop
+
+charIsNotIndexOfAguille:
+    xor rcx, rcx ; On réinitialise si on a pas trouvé le charactère correspondant
+    jmp endFirstLoop
+
+endFirstLoop:
+    inc rdi ; On passe au prochain élément de meule_de_foin
+    jmp loopMyStrStr
+
+exitSuccess:
+    xor rdx, rdx
+    cmp rcx, 1
+    je exitFinalSuccess
+    sub rcx, 1
+    jmp loopAndDecremFinal
+
+loopAndDecremFinal:
+    dec rdi
+    inc rdx
+
+    cmp rdx, rcx
+    je exitFinalSuccess
+
+    jmp loopAndDecremFinal
+
+exitFinalSuccess:
     mov rax, rdi
     ret
 
-charNotFound:
-    mov rax, 0
-    ret
-
-handleExit:
-    mov rax, rdi
+exit:
+    mov rax, 0 ; Si une erreur est détecté on return un null byte
     ret
