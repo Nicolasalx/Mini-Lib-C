@@ -5,13 +5,6 @@
 ** tests_strcasecmp
 */
 
-/*
-** EPITECH PROJECT, 2024
-** MiniLibC
-** File description:
-** tests_strchr
-*/
-
 #include <criterion/criterion.h>
 #include <criterion/redirect.h>
 
