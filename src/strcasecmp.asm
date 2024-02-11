@@ -80,9 +80,27 @@ firstStringEmptyAtStart:
     movzx rbx, byte[rsi]
     mov rax, 0
     sub rax, rbx
+
+    cmp rbx, 65
+    jl exitFinal
+
+    cmp rbx, 90
+    jg exitFinal
+
+    sub rax, 32
     ret
 
 secondStringEmpty:
-    mov rbx, 0
     sub rax, rbx
+
+    cmp byte[rdi], 65
+    jl exitFinal
+
+    cmp byte[rdi], 90
+    jg exitFinal
+
+    add rax, 32
+    jmp exitFinal
+
+exitFinal:
     ret
