@@ -88,6 +88,20 @@ exitFinalSuccess:
     mov rax, rdi
     ret
 
+exitEmpty:
+    cmp byte[rsi], 0
+    je exitLast
+
+    mov rax, 0
+    ret
+
+exitLast:
+    mov rax, rdi
+    ret
+
 exit:
+    cmp byte[rsi], 0
+    jmp exitEmpty
+
     mov rax, 0 ; Si une erreur est détecté on return un null byte
     ret
