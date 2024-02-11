@@ -4,6 +4,8 @@ global strchr
 
 strchr:
     xor rax, rax
+    cmp sil, 0
+    je handleNullByte
 
 counterChar:
     cmp byte [rdi], 0
@@ -21,6 +23,16 @@ secondPartCounterChar:
     jmp counterChar
 
 handleSuccess:
+    mov rax, rdi
+    ret
+
+handleNullByte:
+    cmp byte[rdi], 0
+    je exitNullByte
+    inc rdi
+    jmp handleNullByte
+
+exitNullByte:
     mov rax, rdi
     ret
 

@@ -22,6 +22,13 @@ Test(test_strchr, empty_string)
     cr_assert_null(result, "Expected NULL for empty string");
 }
 
+Test(test_strchr, TestAllEmpty)
+{
+    char *str = "";
+
+    cr_assert(strchr(str, '\0') == strchr(str, '\0'));
+}
+
 Test(test_strchr, character_not_found)
 {
     const char *str = "Hello, World";
@@ -30,6 +37,13 @@ Test(test_strchr, character_not_found)
     char *result = strchr(str, c);
 
     cr_assert_null(result, "Expected NULL for character not found");
+}
+
+Test(test_strchr, testBackslachZero)
+{
+    char *str = "Hello, World!";
+
+    cr_assert(strchr(str, '\0') == strchr(str, '\0'));
 }
 
 Test(test_strchr, character_found_at_start)
@@ -43,6 +57,13 @@ Test(test_strchr, character_found_at_start)
     cr_assert_eq(*result, 'H', "Expected 'H' at the returned position");
 }
 
+Test(test_strchr, TestCrash)
+{
+    char *str = "Test Crash";
+
+    cr_assert(strchr(str, 2147489999) == strchr(str, 2147489999));
+}
+
 Test(test_strchr, character_found_in_middle)
 {
     const char *str = "Hello, World";
@@ -54,6 +75,13 @@ Test(test_strchr, character_found_in_middle)
     cr_assert_eq(*result, 'o', "Expected 'o' at the returned position");
 }
 
+Test(test_strchr, FindWWithEmpty)
+{
+    char *str = "";
+
+    cr_assert(strchr(str, 'A') == strchr(str, 'A'));
+}
+
 Test(test_strchr, character_found_at_end)
 {
     const char *str = "Hello, World";
@@ -63,4 +91,13 @@ Test(test_strchr, character_found_at_end)
 
     cr_assert_not_null(result, "Expected not NULL for character found");
     cr_assert_eq(*result, 'd', "Expected 'd' at the returned position");
+}
+
+Test(test_strchr, findW)
+{
+    char *str = "Hello World";
+
+    cr_assert(strchr(str, 'x') == strchr(str, 'x'));
+
+    cr_assert(strchr(str, 'H') == strchr(str, 'H'));
 }
