@@ -3,26 +3,26 @@ section .text
 global memcpy
 
 memcpy:
-    xor rax, rax ; intialisation de rax
-    xor rcx, rcx ; initialize the counter
-    ; counter will be compare with the size_t n
-    ; if both are equal else the nb chars copied in destination are done
-    mov rdx, rdx ;
+    xor rcx, rcx ; compteur à 0
 
-loopmemcpy:
-    cmp byte [rsi], 0 ; Check if rsi has reached the end of the string
-    je memCpyExit
+loopMemcpy:
+    cmp rcx, rdx ; On compare si le compteur est égal au size_t n
+    je exit
 
-    cmp rcx, rdx ; Check if counter and n are equal / if both are equal else the nb chars copied in destination are done
-    je memCpyExit
+    mov r15b, byte[rsi + rcx]
+    ; On stocke un octet par un octet, soit 8 bit
+    ; Donc nous chargerons le résulat dans r15b
+    ; La partie de droite est la valeur au pointeur de la source + compteur
+    ; Chaque incrémentation le ptr se déplace
 
-    mov al, [rsi] ; Move the byte at [rsi] into al
-    mov [rdi], al ; Move the byte from al to [rdi]
+    mov byte [rdi + rcx], r15b
+    ; On stocke à l'adresse du ptr (incrémenter par le compteur), l'octet précédemment calculé
 
-    inc rsi ; Increment the source for go on next ptr
-    inc rdi ; Increment destination for the emplacment of the nextptr of source
+    inc rcx ; Incrémentation du compteur
 
-    inc rcx
-    jmp loopmemcpy
-memCpyExit:
+    jmp loopMemcpy
+
+
+exit:
+    mov rax, rdi ; On déplace le ptr de rdi dans rax
     ret
