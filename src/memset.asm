@@ -13,12 +13,12 @@ loopmemset:
     cmp rcx, rdx ; Check if counter and n are equal / if both are equal else the nb chars copied in destination are done
     je memsetExit
 
-    mov [rdi], sil ; Move the byte from sil to [rdi] (sil is the int n)
+    mov byte [rdi + rcx], sil ; Move the int (c) at the pos of rid + compteur
 
-    inc rdi ; Increment destination for the emplacment of the nextptr of source
     inc rcx
 
     jmp loopmemset
 
 memsetExit:
+    mov rax, rdi
     ret
