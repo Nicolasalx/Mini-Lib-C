@@ -2,9 +2,9 @@ bits 64
 
 section .text
 
-global mystrpbrk
+global strpbrk
 
-mystrpbrk:
+strpbrk:
     cmp byte [rsi], 0 ; verify if the second string is empty
     je exit ; if empty exit
     mov rdx, rsi ; rdx will stock the second string
