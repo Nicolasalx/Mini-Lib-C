@@ -2,52 +2,45 @@ bits 64
 
 section .text
 
-global memmove
+global mymemmove
 
-memmove:
-    xor rax, rax ; Initialize rax
-    xor rcx, rcx ; Initialize counter
-    mov rdx, rdx ; Initialize rdx with the size_t n
+; rdi : destination
+; rsi : source
+; ecx : size_t n
 
-    cmp rsi, rdi ; At start if src and dest ptr are the same we exit
-    je memmoveExit
+mymemmove:
+    xor rax, rax
+    xor rcx, rcx ; compteur à 0
 
-    cmp rsi, rdi ; Check if the destination is before the source and they overlap
-    jg caseOfOverlap
+loop_memmove:
+    cmp rsi, rdi ; Compare si la source et la destination sont à la meme adresse
+    je exit
 
-beforeCopy:
-    cmp rcx, rdx ; if the counter is equal to the size_t n -> exit
-    je memmoveExit
+    cmp rsi, rdi ; Compare les adresses de src et destination
+    jbe forward_move ; Si src <= dest, on copie de l'avant vers l'arrière
 
-    mov al, [rsi]
-    mov [rdi], al ; We move the rsi in rdi
+    jmp backward_move ; Si source est avant dest
 
-    inc rsi
-    inc rdi
-    inc rcx
-
-    jmp beforeCopy
-
-caseOfOverlap:
-    ; Move source and destination pointers to the end
-    lea rsi, [rsi + rdx - 1]
-    lea rdi, [rdi + rdx - 1]
-
-afterLoop: ; if dest is before src
-    ; (Il y a un chevauchement des deux zones mémoires)
+forward_move: ; Copie avant vers fin
     cmp rcx, rdx
-    je memmoveExit
+    je exit
 
-    mov al, [rsi]
-    mov [rdi], al
-
-    dec rsi
-    dec rdi
-
+    mov r15b, byte[rsi + rcx]
+    mov byte [rdi + rcx], r15b
     inc rcx
+    jmp forward_move
 
-    jmp afterLoop
 
-memmoveExit:
+backward_move: ; Copie fin vers avant
+    cmp rdx, 0
+    je exit
+
+    dec rdx
+    mov r15b, byte[rsi + rdx]
+    mov byte [rdi + rdx], r15b
+
+    jmp backward_move
+
+exit:
+    mov rax, rdi
     ret
-
