@@ -2,13 +2,13 @@ bits 64
 
 section .text
 
-global mymemmove
+global memmove
 
 ; rdi : destination
 ; rsi : source
 ; ecx : size_t n
 
-mymemmove:
+memmove:
     xor rax, rax
     xor rcx, rcx ; compteur à 0
 
