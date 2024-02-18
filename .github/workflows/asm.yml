@@ -1,0 +1,52 @@
+name: my_asm_action
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  check_compilation_and_tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    container:
+      image: epitechcontent/epitest-docker:latest
+      volumes:
+        - ${{ github.workspace }}:/app
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Check compilation
+      run: |
+        echo "## 🚀 Compilation result" >> $GITHUB_STEP_SUMMARY
+        make ADDITIONAL_FLAGS="-Werror"
+        if [ $? -ne 0 ]; then
+          echo "- ### Compilation failed ❌" >> $GITHUB_STEP_SUMMARY
+          echo "Compilation failed."
+          exit 1
+        else
+          echo "- ### Compilation succeed ✅" >> $GITHUB_STEP_SUMMARY
+        fi
+
+    - name: Run unit tests
+      run: |
+        echo "## 🧪 Test results" >> $GITHUB_STEP_SUMMARY
+        make unit_tests ADDITIONAL_FLAGS="-Werror"
+        if [ $? -ne 0 ]; then
+          echo "- ### Test compilation failed ❌" >> $GITHUB_STEP_SUMMARY
+          echo "Test compilation failed."
+          exit 1
+        else
+          run_tests() {
+            ./unit_tests
+            echo "| Passed ✅ | Failed ❌ | Assertions 🔬 |" >> $GITHUB_STEP_SUMMARY
+            echo "| :-------- | :-------- | :------------ |" >> $GITHUB_STEP_SUMMARY
+            ./unit_tests | awk '/\[doctest\] assertions:/ { print "|", $5, "|", $8, "|", $3 }' >> $GITHUB_STEP_SUMMARY
+          }
+
+          run_tests
+        fi
