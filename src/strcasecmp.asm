@@ -12,7 +12,7 @@ compareEachChar:
     movzx rbx, byte [rsi]
 
     cmp rax, 0
-    je checkSuccess
+    je errorHandle
 
     cmp rbx, 0
     je errorHandle
