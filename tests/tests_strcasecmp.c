@@ -91,3 +91,13 @@ Test(test_strcasecmp8, both_null_strings)
 
     cr_assert_eq(result, -104, "Error");
 }
+
+Test(test_strcasecmp8, snd_string_upper)
+{
+    const char *str1 = "abcd";
+    const char *str2 = "abcde";
+
+    int result = strcasecmp(str1, str2);
+
+    cr_assert_eq(result, -101, "Error");
+}
