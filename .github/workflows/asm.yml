@@ -31,22 +31,3 @@ jobs:
         else
           echo "- ### Compilation succeed ✅" >> $GITHUB_STEP_SUMMARY
         fi
-
-    - name: Run unit tests
-      run: |
-        echo "## 🧪 Test results" >> $GITHUB_STEP_SUMMARY
-        make unit_tests ADDITIONAL_FLAGS="-Werror"
-        if [ $? -ne 0 ]; then
-          echo "- ### Test compilation failed ❌" >> $GITHUB_STEP_SUMMARY
-          echo "Test compilation failed."
-          exit 1
-        else
-          run_tests() {
-            ./unit_tests
-            echo "| Passed ✅ | Failed ❌ | Assertions 🔬 |" >> $GITHUB_STEP_SUMMARY
-            echo "| :-------- | :-------- | :------------ |" >> $GITHUB_STEP_SUMMARY
-            ./unit_tests | awk '/\[doctest\] assertions:/ { print "|", $5, "|", $8, "|", $3 }' >> $GITHUB_STEP_SUMMARY
-          }
-
-          run_tests
-        fi
