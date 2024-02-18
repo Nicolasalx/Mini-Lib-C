@@ -61,3 +61,71 @@ Test (test_strstr5, test)
     cr_assert(result, "Hello, world!");
 }
 
+Test(strstr, basic)
+{
+    const char *s1 = "test";
+    const char *s2 = "st";
+
+    cr_assert_not_null(strstr(s1, s2));
+
+    cr_assert_str_eq(strstr(s1, s2), strstr(s1, s2));
+}
+
+Test(strstr, empty_string)
+{
+    char *s1 = strdup("");
+    char *s2 = strdup("st");
+
+    cr_assert(strstr(s1, s2) == strstr(s1, s2));
+    cr_assert(strstr(s2, s1) == strstr(s2, s1));
+}
+
+Test(strstr, null_byte)
+{
+    char *s1 = strdup("");
+    char *s2 = strdup("\0");
+
+    cr_assert(strstr(s1, s2) == strstr(s1, s2));
+    cr_assert(strstr(s2, s1) == strstr(s2, s1));
+    cr_assert(strstr(s1, s1) == strstr(s1, s1));
+}
+
+Test(strstr, full_null)
+{
+    char *str1 = strdup("");
+    char *str2 = strdup("");
+
+    cr_assert(strstr(str1, str2) == strstr(str1, str2));
+}
+
+Test(strstr, not_found)
+{
+    char *str1 = strdup("Hello, world!");
+    char *str2 = strdup("lloa");
+
+    cr_assert(strstr(str1, str2) == NULL);
+}
+
+Test(strstr, not_found_2)
+{
+    char *str1 = strdup("Hello, world!");
+    char *str2 = strdup("a");
+
+    cr_assert(strstr(str1, str2) == NULL);
+}
+
+Test(strstr, not_found_3)
+{
+    char *str1 = strdup("");
+    char *str2 = strdup("a");
+
+    cr_assert(strstr(str1, str2) == NULL);
+}
+
+Test(strstr, not_found_4)
+{
+    char *str1 = strdup("a");
+    char *str2 = strdup("");
+
+    cr_assert(strstr(str1, str2), "a");
+}
