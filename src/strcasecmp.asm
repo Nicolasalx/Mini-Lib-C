@@ -51,12 +51,6 @@ transformCharSecondString:
     add rbx, 32
     jmp compareThirdParts
 
-checkSuccess:
-    cmp rax, 0
-    je exitSuccess
-
-    jmp errorHandle
-
 exitSuccess:
     mov rax, 0
     ret
