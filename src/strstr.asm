@@ -34,7 +34,7 @@ endstrlen:
     jmp loopMyStrStr
 
 loopMyStrStr:
-    cmp rdi, 0 ; On check si la string meule de foin n'arrive pas au null byte
+    cmp byte[rdi], 0 ; On check si la string meule de foin n'arrive pas au null byte
     je exit
 
     ; On va venir checker si l'élément de rdi est égal à l'élément de rsi[index]
@@ -88,20 +88,13 @@ exitFinalSuccess:
     mov rax, rdi
     ret
 
-exitEmpty:
+exit:
     cmp byte[rsi], 0
     je exitLast
 
-    mov rax, 0
+    mov rax, 0 ; Si une erreur est détecté on return un null byte
     ret
 
 exitLast:
     mov rax, rdi
-    ret
-
-exit:
-    cmp byte[rsi], 0
-    jmp exitEmpty
-
-    mov rax, 0 ; Si une erreur est détecté on return un null byte
     ret
