@@ -13,23 +13,22 @@ memmove:
     xor rcx, rcx ; compteur à 0
 
 loop_memmove:
-    cmp rsi, rdi ; Compare si la source et la destination sont à la meme adresse
-    je exit
-
     cmp rsi, rdi ; Compare les adresses de src et destination
-    jbe forward_move ; Si src <= dest, on copie de l'avant vers l'arrière
+    jbe backward_move ; Si src <= dest, on copie de l'avant vers l'arrière
 
-    jmp backward_move ; Si source est avant dest
+    jmp forward_move ; Si source est avant dest
 
 forward_move: ; Copie avant vers fin
-    cmp rcx, rdx
+    cmp rdx, 0
     je exit
 
     mov r15b, byte[rsi + rcx]
-    mov byte [rdi + rcx], r15b
+    mov byte[rdi + rcx], r15b
     inc rcx
-    jmp forward_move
 
+    dec rdx
+
+    jmp forward_move
 
 backward_move: ; Copie fin vers avant
     cmp rdx, 0
@@ -37,7 +36,7 @@ backward_move: ; Copie fin vers avant
 
     dec rdx
     mov r15b, byte[rsi + rdx]
-    mov byte [rdi + rdx], r15b
+    mov byte[rdi + rdx], r15b
 
     jmp backward_move
 
