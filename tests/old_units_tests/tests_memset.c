@@ -48,12 +48,12 @@ Test(test_memset, set_partial)
 Test(test_memset, set_struct)
 {
     struct {
-        int x;
-        float y;
+        char x;
+        int y;
     } data;
 
     memset(&data, 0, sizeof(data));
 
-    cr_assert(data.x == 0);
-    cr_assert(data.y == 0.0f);
+    cr_assert(data.x == '\0');
+    cr_assert(data.y == 0);
 }

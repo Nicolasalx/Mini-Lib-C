@@ -30,7 +30,7 @@ CFLAGS			=	-W -Wall -Wextra -Werror
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(LINKER) -shared -o $(NAME) $(OBJ)
+	$(LINKER) -fPIC -shared -o $(NAME) $(OBJ)
 
 %.o: %.asm
 	$(AS) $(ASFLAGS) $< -o $@
@@ -45,7 +45,7 @@ fclean: clean
 re: fclean all
 
 unit_tests: re
-	gcc -o $(NAME_TESTS) $(SRC_TESTS) $(NAME) $(CFLAGS) $(RUN_TEST)
+	gcc -o $(NAME_TESTS) $(SRC_TESTS) $(NAME) $(CFLAGS) $(RUN_TEST) -ldl
 
 tests_run: unit_tests
 	LD_LIBRARY_PATH=. LD_PRELOAD=./libasm.so ./unit_tests
