@@ -2,6 +2,8 @@ bits 64
 section .text
 global strchr
 
+global index
+
 strchr:
     xor rax, rax
     cmp sil, 0
@@ -39,3 +41,5 @@ exitNullByte:
 handleError:
     mov rax, 0
     ret
+
+index equ strchr

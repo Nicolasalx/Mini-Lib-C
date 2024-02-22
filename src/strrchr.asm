@@ -4,6 +4,8 @@ section .text
 
 global strrchr
 
+global rindex
+
 strrchr:
     xor rax, rax
     xor rcx, rcx
@@ -40,6 +42,4 @@ exitNullByte:
 handleError:
     ret
 
-
-
-
+rindex equ strrchr
