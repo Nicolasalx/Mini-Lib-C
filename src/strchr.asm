@@ -6,14 +6,14 @@ global index
 
 strchr:
     xor rax, rax
-    cmp sil, 0
+    cmp sil, 0 ; Si le char c est Null on jmp
     je handleNullByte
 
 counterChar:
-    cmp byte [rdi], 0
+    cmp byte [rdi], 0 ; Si le pointeur sur la 
     je handleError
 
-    cmp byte [rdi], sil
+    cmp byte [rdi], sil ; Si on trouve le char dans la string on met rdi dans rax
     je handleSuccess
 
     inc rdi
@@ -28,6 +28,7 @@ handleSuccess:
     mov rax, rdi
     ret
 
+; On return la string entière et on exit
 handleNullByte:
     cmp byte[rdi], 0
     je exitNullByte

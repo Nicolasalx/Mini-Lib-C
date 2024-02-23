@@ -5,33 +5,33 @@ section .text
 global strpbrk
 
 strpbrk:
-    cmp byte [rsi], 0 ; verify if the second string is empty
-    je exit ; if empty exit
-    mov rdx, rsi ; rdx will stock the second string
+    cmp byte [rsi], 0 ; On check si la seconde string n'est pas empty
+    je exit
+    mov rdx, rsi ; On stock la seconde string dans rdx
     xor rcx, rcx
 
 looppmystrpbrk:
-    cmp byte [rdi], 0 ; Verify if the actual pointer is empty of the first string
+    cmp byte [rdi], 0 ; On check si le pointeur sur la première string n'est pas null
     je exit
-
-    jmp loopSecondString ; If the first string is not empty, continue
-
-loopSecondString:
-    cmp byte [rdx], 0 ; verify if the actual pointer is empty of the second string
-    je endSndString ; if the second string is finish go on next char of the first string
-
-    mov al, [rdx]
-    cmp al, [rdi] ; if a character is found
-    je getAllTheCharsAfter
-
-    inc rdx ; move to the next elem of the second string
 
     jmp loopSecondString
 
-endSndString: ; continue to next incrementation of pointer of the first string
+loopSecondString:
+    cmp byte [rdx], 0 ; On check si le pointeur sur la première string n'est pas null
+    je endSndString ; Si la seconde string est fini on va au prochain char de la pre if the second string is finish go on next char of the first string
+
+    mov al, [rdx]
+    cmp al, [rdi] ; Si le character n'a pas été trouver
+    je getAllTheCharsAfter
+
+    inc rdx ; On se déplace au prochain élément de la seconde string
+
+    jmp loopSecondString
+
+endSndString: ; On continue à la prochaine incrémentation du pointer de la première string
     inc rdi
     inc rcx
-    mov rdx, rsi ; We set rdx at the pointer on the top of the second string
+    mov rdx, rsi ; On set rdx au pointer de la seconde string
 
     jmp looppmystrpbrk
 

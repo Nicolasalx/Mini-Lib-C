@@ -9,14 +9,14 @@ global rindex
 strrchr:
     xor rax, rax
     xor rcx, rcx
-    cmp sil, 0
+    cmp sil, 0 ; Si le char est null alors on va exit
     je handleNullByte
 
 loopmystrrchr:
-    cmp byte [rdi], 0
+    cmp byte [rdi], 0 ; Si le pointer de la première string est null
     je handleError
 
-    cmp byte [rdi], sil
+    cmp byte [rdi], sil ; Si on trouve le charactère
     je handleEqual
 
     jmp incrementPointer
@@ -36,7 +36,7 @@ handleNullByte:
     jmp handleNullByte
 
 exitNullByte:
-    mov rax, rdi
+    mov rax, rdi ; Je return le dernier character trouver
     ret
 
 handleError:
